@@ -1,0 +1,23 @@
+parameters:
+    level: 9
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkUninitializedProperties: true
+    checkImplicitMixed: true
+    checkBenevolentUnionTypes: true
+    reportAlwaysTrueInLastCondition: true
+    checkMissingOverrideMethodAttribute: true
+    treatPhpDocTypesAsCertain: false
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+    #doctrine:
+        #see https://github.com/phpstan/phpstan-doctrine/issues/297
+        #objectManagerLoader: tests/object-manager.php
+        #reportDynamicQueryBuilders: true
