@@ -104,7 +104,7 @@ init-tools: ## Create local configuration for tools
 	@$(PHP_CONT) cp phpstan.dist.neon phpstan.neon
 
 install-requirements: ## Install vendors
-	@$(COMPOSER) require \
+	@$(COMPOSER) require --no-progress --update-with-all-dependencies \
 		symfony/orm-pack \
 		symfony/uid \
 		nelmio/cors-bundle \
