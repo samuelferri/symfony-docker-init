@@ -24,8 +24,9 @@ help: ## Outputs this help screen
 build: ## Builds the Docker images
 	@$(DOCKER_COMP) build --pull --no-cache
 
-up: ## Start the docker hub in detached mode (no logs)
-	@$(DOCKER_COMP) up
+up: ## Start the docker hub
+	@$(eval c ?=)
+	@$(DOCKER_COMP) up $(c)
 
 start: build up ## Build and start the containers
 
@@ -74,7 +75,7 @@ cc: c=c:c ## Clear the cache
 cc: sf
 
 ## —— Database 💾  ———————————————————————————————————————————————————————————————
-.PHONY: doctrine database-drop database-create database-restart migrate init-data fixtures
+.PHONY: doctrine database-drop database-create database-restart migrate fixtures
 
 doctrine: ## Run doctrine, pass the parameter "c=" to run a given command, example: make doctrine c='orm:schema-tool:create'
 	@$(eval c ?=)
@@ -92,19 +93,30 @@ database-restart: ## Restart the database
 migrate: c=migrations:migrate ## Migrate the database
 migrate: doctrine
 
-init-data: c=app:initialize:data ## Create needed data to run the application
-init-data: sf
-
 fixtures: c=fixtures:load ## Load fixtures
 fixtures: doctrine
 
 ## —— Tools 🛠  ———————————————————————————————————————————————————————————————
-.PHONY: init-tools cs stan bin pu puf pur puu tools
+.PHONY: init-tools install-requirements cs stan bin check
 
 init-tools: ## Create local configuration for tools
 	@$(PHP_CONT) cp .php-cs-fixer.dist.php .php-cs-fixer.php
 	@$(PHP_CONT) cp phpstan.dist.neon phpstan.neon
-	@$(PHP_CONT) cp phpunit.xml.dist phpunit.xml
+
+install-requirements: ## Install vendors
+	@$(COMPOSER) require \
+		symfony/orm-pack \
+		symfony/uid \
+		nelmio/cors-bundle \
+		--dev \
+		symfony/maker-bundle \
+		zenstruck/foundry \
+		friendsofphp/php-cs-fixer \
+		phpstan/phpstan \
+		phpstan/phpstan-doctrine \
+		phpstan/phpstan-phpunit \
+		phpstan/phpstan-strict-rules \
+		phpstan/phpstan-symfony
 
 bin: ## Run a vendor binary, pass the parameter "c=" to run a given command, example: make bin c='phpunit'
 	@$(eval c ?=)
@@ -116,20 +128,5 @@ cs: ## Code style fixer
 stan: ## PHPStan with PHPAT
 	@$(VENDOR_BIN)phpstan analyse src --memory-limit=1G
 
-pu: ## PHPUnit - All tests
-	@$(VENDOR_BIN)phpunit --coverage-text --show-uncovered-for-coverage-text
-
-puu: ## PHPUnit - Unit tests only
-	@$(VENDOR_BIN)phpunit --coverage-text --show-uncovered-for-coverage-text --testsuite Unit
-
-puf: ## PHPUnit - Functional tests only
-	@$(VENDOR_BIN)phpunit --coverage-text --show-uncovered-for-coverage-text --testsuite Functional
-
-pur: ## PHPUnit - All tests with HTML report
-	@$(VENDOR_BIN)phpunit --coverage-html .phpunit.cache/report/
-
 check: cs ## Check code style and run PHPStan
 check: stan
-
-tools: cs ## Execute all tools
-tools: stan
