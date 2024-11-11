@@ -23,6 +23,7 @@ When the container is up, run the following command to install the requirements 
 ```bash
 make install-packages
 make down
+make build
 make up
 ```
 

@@ -17,7 +17,3 @@ parameters:
         check:
             missingCheckedExceptionInThrows: true
             tooWideThrowType: true
-    doctrine:
-        # see https://github.com/phpstan/phpstan-doctrine/issues/297
-        objectManagerLoader: tests/object-manager.php
-        reportDynamicQueryBuilders: true
