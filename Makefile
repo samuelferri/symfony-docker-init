@@ -97,13 +97,13 @@ fixtures: c=fixtures:load ## Load fixtures
 fixtures: doctrine
 
 ## —— Tools 🛠  ———————————————————————————————————————————————————————————————
-.PHONY: init-tools install-requirements cs stan bin check
+.PHONY: init-tools install-packages cs stan bin check
 
 init-tools: ## Create local configuration for tools
 	@$(PHP_CONT) cp .php-cs-fixer.dist.php .php-cs-fixer.php
 	@$(PHP_CONT) cp phpstan.dist.neon phpstan.neon
 
-install-requirements: ## Install vendors
+install-packages: ## Install packages
 	@$(COMPOSER) require --no-progress --update-with-all-dependencies \
 		symfony/orm-pack \
 		symfony/uid \

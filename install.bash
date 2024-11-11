@@ -12,7 +12,4 @@ wget https://raw.githubusercontent.com/samuelferri/symfony-docker-init/refs/head
 
 # Build and run the containers
 make build
-make up c="-d"
-make install-requirements
-make down
 make up
